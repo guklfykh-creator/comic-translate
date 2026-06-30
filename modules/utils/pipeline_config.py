@@ -98,3 +98,26 @@ def validate_settings(main: ComicTranslate, target_lang: str):
         return False
     
     return True
+
+
+def validate_auto_translate_settings(main: ComicTranslate) -> bool:
+    settings_page = main.settings_page
+
+    if not settings_page.is_logged_in():
+        provider_mgr = getattr(main, 'ai_provider_mgr', None)
+        if provider_mgr is None:
+            Messages.show_not_logged_in_error(main)
+            return False
+        active = provider_mgr.get_active_provider()
+        if active is None:
+            Messages.show_custom_not_configured_error(main)
+            return False
+        ok, msg = active.validate_fields()
+        if not ok:
+            Messages.show_custom_not_configured_error(main)
+            return False
+
+    if not font_selected(main):
+        return False
+
+    return True

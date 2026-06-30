@@ -14,6 +14,9 @@ from ...dayu_widgets.qt import MIcon
 from ...dayu_widgets.tool_button import MToolButton
 
 
+_AUTO_TRANSLATE_SVG = "pipeline_translate.svg"
+
+
 class NavRailMixin:
     def _create_nav_rail(self):
         nav_rail_layout = QtWidgets.QVBoxLayout()
@@ -145,6 +148,12 @@ class NavRailMixin:
                 "clicked": self.show_main_page,
             },
             {
+                "svg": _AUTO_TRANSLATE_SVG,
+                "checkable": True,
+                "tooltip": self.tr("Auto Translate"),
+                "clicked": self.show_auto_translate_page,
+            },
+            {
                 "svg": "settings.svg",
                 "checkable": True,
                 "tooltip": self.tr("Settings"),
@@ -156,7 +165,8 @@ class NavRailMixin:
         self.nav_tool_group = nav_tool_group
         self.startup_nav_button = nav_buttons[0]
         self.home_nav_button = nav_buttons[1]
-        self.settings_nav_button = nav_buttons[2]
+        self.auto_translate_nav_button = nav_buttons[2]
+        self.settings_nav_button = nav_buttons[3]
         self.startup_nav_button.setChecked(True)
 
         self.search_sidebar_button = MToolButton()

@@ -33,6 +33,8 @@ from app.controllers.shortcuts import ShortcutController
 from app.controllers.task_runner import TaskRunnerController
 from app.controllers.batch_report import BatchReportController
 from app.controllers.manual_workflow import ManualWorkflowController
+from app.controllers.auto_translate import AutoTranslateController
+from app.ai_providers.manager import AIProviderManager
 from modules.utils.exceptions import InsufficientCreditsException, ContentFlaggedException
 
 
@@ -121,6 +123,8 @@ class ComicTranslate(ComicTranslateUI):
         self.task_runner_ctrl = TaskRunnerController(self)
         self.batch_report_ctrl = BatchReportController(self)
         self.manual_workflow_ctrl = ManualWorkflowController(self)
+        self.auto_translate_ctrl = AutoTranslateController(self)
+        self.ai_provider_mgr = AIProviderManager()
         try:
             if self._memlogger is not None:
                 self._memlogger.emit("after_controllers_init")
@@ -141,6 +145,11 @@ class ComicTranslate(ComicTranslateUI):
 
         self.project_ctrl.load_main_page_settings()
         self.settings_page.load_settings()
+        self.settings_page.set_ai_provider_manager(self.ai_provider_mgr)
+        self.auto_translate_page.set_manager(self.ai_provider_mgr)
+        self.auto_translate_page.start_requested.connect(self.auto_translate_ctrl.start_translation)
+        self.auto_translate_page.cancel_requested.connect(self.auto_translate_ctrl.cancel_translation)
+        self.auto_translate_page.retry_failed_btn.clicked.connect(self.auto_translate_ctrl.retry_failed)
         self.project_ctrl.initialize_autosave()
 
         # Populate the home screen with any previously-saved recent projects

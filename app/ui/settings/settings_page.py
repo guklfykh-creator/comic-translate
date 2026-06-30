@@ -71,6 +71,9 @@ class SettingsPage(QtWidgets.QWidget):
         self.setLayout(layout)
         self._refresh_credits_on_startup()
 
+    def set_ai_provider_manager(self, manager):
+        self.ui.ai_providers_page.set_manager(manager)
+
     def _is_online(self) -> bool:
         try:
             socket.create_connection(("8.8.8.8", 53), 2)
@@ -129,6 +132,8 @@ class SettingsPage(QtWidgets.QWidget):
         return {
             'extra_context': self.ui.extra_context.toPlainText(),
             'image_input_enabled': self.ui.image_checkbox.isChecked(),
+            'reasoning_enabled': self.ui.reasoning_checkbox.isChecked(),
+            'system_prompt': self.ui.system_prompt_edit.toPlainText(),
         }
 
     def get_export_settings(self):
@@ -168,6 +173,12 @@ class SettingsPage(QtWidgets.QWidget):
             if normalized == "Custom":
                 for field in ("api_key", "api_url", "model"):
                     creds[field] = _text_or_none(f"Custom_{field}")
+                provider_mgr = getattr(self.window() if self.window() else self, 'ai_provider_mgr', None)
+                if provider_mgr:
+                    active = provider_mgr.get_active_provider()
+                    if active:
+                        creds['custom_headers'] = active.custom_headers
+                        creds['timeout'] = active.timeout
 
             return creds
 
@@ -385,6 +396,8 @@ class SettingsPage(QtWidgets.QWidget):
         settings.beginGroup('llm')
         self.ui.extra_context.setPlainText(settings.value('extra_context', ''))
         self.ui.image_checkbox.setChecked(settings.value('image_input_enabled', False, type=bool))
+        self.ui.reasoning_checkbox.setChecked(settings.value('reasoning_enabled', False, type=bool))
+        self.ui.system_prompt_edit.setPlainText(settings.value('system_prompt', '', type=str))
         settings.endGroup()
 
         # Load export settings

@@ -12,6 +12,7 @@ from app.ui.dayu_widgets.theme import MTheme
 from app.ui.list_view import PageListView
 from app.ui.settings.settings_page import SettingsPage
 from app.ui.startup_home import StartupHomeScreen
+from app.ui.auto_translate.page import AutoTranslatePage
 from app.ui.title_bar import CustomTitleBar, RESIZE_MARGIN
 from .builders import MainWindowBuildersMixin
 from .frame import EdgeResizer
@@ -84,6 +85,7 @@ class ComicTranslateUI(
 
         self.image_viewer = ImageViewer(self)
         self.settings_page = SettingsPage(self)
+        self.auto_translate_page = AutoTranslatePage(self)
         self.settings_page.theme_changed.connect(self.apply_theme)
         self.settings_page.font_imported.connect(self.set_font)
         self.main_content_widget = None
@@ -179,6 +181,7 @@ class ComicTranslateUI(
         self.startup_home = StartupHomeScreen()
         self._center_stack.addWidget(self.startup_home)
         self._center_stack.addWidget(self.main_content_widget)
+        self._center_stack.addWidget(self.auto_translate_page)
         self._center_stack.addWidget(self.settings_page)
 
         self._center_stack.setCurrentWidget(self.startup_home)
@@ -209,6 +212,7 @@ class ComicTranslateUI(
         page_to_button = {
             "startup": getattr(self, "startup_nav_button", None),
             "home": getattr(self, "home_nav_button", None),
+            "auto_translate": getattr(self, "auto_translate_nav_button", None),
             "settings": getattr(self, "settings_nav_button", None),
         }
         for name, button in page_to_button.items():
@@ -239,6 +243,12 @@ class ComicTranslateUI(
         self._finish_settings_resize_preview()
         self._center_stack.setCurrentWidget(self.settings_page)
         self._set_active_nav_button("settings")
+
+    def show_auto_translate_page(self):
+        self._finish_settings_resize_preview()
+        self._set_document_tools_visible(False)
+        self._center_stack.setCurrentWidget(self.auto_translate_page)
+        self._set_active_nav_button("auto_translate")
 
     def show_main_page(self):
         self._finish_settings_resize_preview()

@@ -269,3 +269,29 @@ class Messages:
             closable=True
         )
 
+    @staticmethod
+    def show_auto_translate_provider_not_configured(parent):
+        MMessage.error(
+            text=QCoreApplication.translate(
+                "Messages",
+                "No AI provider configured for Auto Translate.\n"
+                "Add a provider in Settings > AI Providers first."
+            ),
+            parent=parent,
+            duration=None,
+            closable=True
+        )
+
+    @staticmethod
+    def show_auto_translate_no_pages_selected(parent):
+        MMessage.error(
+            text=QCoreApplication.translate(
+                "Messages",
+                "No pages selected for Auto Translate.\n"
+                "Select at least one page to translate."
+            ),
+            parent=parent,
+            duration=None,
+            closable=True
+        )
+

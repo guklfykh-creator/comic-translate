@@ -556,6 +556,11 @@ class ImageStateController:
             page_list.setUpdatesEnabled(True)
             page_list.viewport().update()
 
+        try:
+            self.main.auto_translate_page.refresh_pages(self.main.image_files)
+        except Exception:
+            pass
+
     def remove_page_list_rows(self, removed_indices: list[int]):
         """Remove list rows in place to avoid rebuilding the entire sidebar."""
         if not removed_indices:

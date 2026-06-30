@@ -17,6 +17,7 @@ from .export_page import ExportPage
 from .shortcuts_page import ShortcutsPage
 from .account_page import AccountPage
 from .about_page import AboutPage
+from .ai_providers_page import AIProvidersPage
 
 
 class CurrentPageStack(QtWidgets.QStackedWidget):
@@ -195,6 +196,7 @@ class SettingsPageUI(QtWidgets.QWidget):
         self.shortcuts_page = ShortcutsPage(parent=self)
         self.account_page = AccountPage(parent=self)
         self.about_page = AboutPage(parent=self)
+        self.ai_providers_page = AIProvidersPage(parent=self)
 
         # Backward-compatible attribute proxies for existing SettingsPage references
         # Personalization
@@ -219,6 +221,8 @@ class SettingsPageUI(QtWidgets.QWidget):
         # LLMs
         self.image_checkbox = self.llms_page.image_checkbox
         self.extra_context = self.llms_page.extra_context
+        self.reasoning_checkbox = self.llms_page.reasoning_checkbox
+        self.system_prompt_edit = self.llms_page.system_prompt_edit
 
         # Text rendering
         self.min_font_spinbox = self.text_rendering_page.min_font_spinbox
@@ -257,6 +261,7 @@ class SettingsPageUI(QtWidgets.QWidget):
         self.stacked_widget.addWidget(self.export_page)
         self.stacked_widget.addWidget(self.shortcuts_page)
         self.stacked_widget.addWidget(self.credentials_page)
+        self.stacked_widget.addWidget(self.ai_providers_page)
         self.stacked_widget.addWidget(self.about_page)
 
         settings_layout = QtWidgets.QHBoxLayout()
@@ -311,8 +316,9 @@ class SettingsPageUI(QtWidgets.QWidget):
             {"title": self.tr("Project"), "avatar": MPixmap(".svg")},
             {"title": self.tr("Export"), "avatar": MPixmap(".svg")},
             {"title": self.tr("Shortcuts"), "avatar": MPixmap(".svg")},
-            {"title": self.tr("Advanced"), "avatar": MPixmap(".svg")},
-            {"title": self.tr("About"), "avatar": MPixmap(".svg")},
+             {"title": self.tr("Advanced"), "avatar": MPixmap(".svg")},
+             {"title": self.tr("AI Providers"), "avatar": MPixmap(".svg")},
+             {"title": self.tr("About"), "avatar": MPixmap(".svg")},
         ]):
             nav_card = ClickMeta(extra=False)
             nav_card.setup_data(setting)

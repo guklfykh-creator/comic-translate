@@ -16,17 +16,9 @@ class GPTTranslation(BaseLLMTranslation):
         self.api_key = None
         self.api_base_url = "https://api.openai.com/v1"
         self.supports_images = True
+        self.custom_headers = {}
     
     def initialize(self, settings: Any, source_lang: str, target_lang: str, model_name: str, **kwargs) -> None:
-        """
-        Initialize GPT translation engine.
-        
-        Args:
-            settings: Settings object with credentials
-            source_lang: Source language name
-            target_lang: Target language name
-            model_name: GPT model name
-        """
         super().initialize(settings, source_lang, target_lang, **kwargs)
         
         self.model_name = model_name
@@ -35,24 +27,13 @@ class GPTTranslation(BaseLLMTranslation):
         self.model = MODEL_MAP.get(self.model_name)
     
     def _perform_translation(self, user_prompt: str, system_prompt: str, image: np.ndarray) -> str:
-        """
-        Perform translation using direct REST API calls to OpenAI.
-        
-        Args:
-            user_prompt: Text prompt from user
-            system_prompt: System instructions
-            image: Image as numpy array
-            
-        Returns:
-            Translated text
-        """
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
         }
+        headers.update(self.custom_headers)
         
         if self.supports_images and self.img_as_llm_input:
-            # Use the base class method to encode the image
             encoded_image, mime_type = self.encode_image(image)
             
             messages = [
@@ -88,12 +69,12 @@ class GPTTranslation(BaseLLMTranslation):
             "top_p": self.top_p,
         }
 
+        if self.reasoning_enabled:
+            payload["reasoning_effort"] = "low"
+
         return self._make_api_request(payload, headers)
     
     def _make_api_request(self, payload, headers):
-        """
-        Make API request and process response
-        """
         try:
             response = requests.post(
                 f"{self.api_base_url}/chat/completions",
