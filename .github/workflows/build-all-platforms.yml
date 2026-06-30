@@ -137,7 +137,6 @@ jobs:
             libxcb-cursor0 \
             libxrandr2 \
             libxss1 \
-            libasound2t64 \
             libdrm2 \
             libegl1 \
             libfontconfig1 \
@@ -152,7 +151,7 @@ jobs:
             libxcb-xfixes0 \
             libxcb-xkb1 \
             libxkbcommon-x11-0 \
-            libxcb-cursor0
+            $(dpkg-query -W -f '${Package}' libasound2t64 2>/dev/null && echo libasound2t64 || echo libasound2)
 
       - name: Set up Python
         uses: actions/setup-python@v6
