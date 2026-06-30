@@ -17,13 +17,13 @@ jobs:
         include:
           - runner: macos-13
             arch: x86_64
-            python-version: '3.14.5'
+            python-version: '3.12'
           - runner: macos-14
             arch: arm64
-            python-version: '3.14.5'
+            python-version: '3.12'
           - runner: macos-15
             arch: arm64
-            python-version: '3.14.5'
+            python-version: '3.12'
     runs-on: ${{ matrix.runner }}
 
     steps:
@@ -84,7 +84,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14.5'
+          python-version: '3.12'
           cache: 'pip'
 
       - name: Install dependencies
@@ -137,15 +137,27 @@ jobs:
             libxcb-cursor0 \
             libxrandr2 \
             libxss1 \
-            libasound2 \
+            libasound2t64 \
             libdrm2 \
             libegl1 \
-            libfontconfig1
+            libfontconfig1 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-shape0 \
+            libxcb-sync1 \
+            libxcb-util1 \
+            libxcb-xfixes0 \
+            libxcb-xkb1 \
+            libxkbcommon-x11-0 \
+            libxcb-cursor0
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14.5'
+          python-version: '3.12'
           cache: 'pip'
 
       - name: Install dependencies
